@@ -40,8 +40,8 @@ async def main() -> None:
 
     # create a few programs
     await run_sequence(
-        service.send_msg(Message(hue_light_id, MessageType.SWITCH_ON)),
-        service.send_msg(Message(speaker_id, MessageType.SWITCH_ON)),
+        run_parallel(service.send_msg(Message(hue_light_id, MessageType.SWITCH_ON)),
+        service.send_msg(Message(speaker_id, MessageType.SWITCH_ON))),
         service.send_msg(Message(speaker_id, MessageType.PLAY_SONG,
                                  "Rick Astley - Never Gonna Give You Up"))
     )
@@ -49,8 +49,10 @@ async def main() -> None:
     await run_parallel(
         service.send_msg(Message(hue_light_id, MessageType.SWITCH_OFF)),
         service.send_msg(Message(speaker_id, MessageType.SWITCH_OFF)),
+    )
+    await run_sequence(
         service.send_msg(Message(toilet_id, MessageType.FLUSH)),
-        service.send_msg(Message(toilet_id, MessageType.CLEAN)),
+        service.send_msg(Message(toilet_id, MessageType.CLEAN))
     )
 
 if __name__ == "__main__":
